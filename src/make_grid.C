@@ -37,9 +37,15 @@ double step_theta(double thetaMin, double thetaStep, unsigned int i);
 double calc_Q2(double E0, double Ep, double theta); // Momentum transfer
 double calc_W2(double E0, double Ep, double theta); // Invariant mass
 
-int main() {
+int main(int argc, char** argv) {
 
-  cout << "\n Enter the name of the input grid file to create (*.inp): ";
+  gridFileName=argv[1];
+  E0=atof(argv[2]);
+  EpMin=atof(argv[3]);
+  EpMax=atof(argv[4]);
+  EpStep=atof(argv[5]);
+  thetaMin=atof(argv[6]);
+/*  cout << "\n Enter the name of the input grid file to create (*.inp): ";
   cin  >> gridFileName;
   cout << "\n Enter the beam energy (GeV): ";
   cin  >> E0;
@@ -55,16 +61,16 @@ int main() {
   }
   cout << "\n Enter the minimum scattering angle (degrees): ";
   cin  >> thetaMin;
-  cout << "\n Enter the maximum scattering angle (degrees): ";
-  cin  >> thetaMax;
-  cout << "\n Enter the integer step size of the scattering angle (degrees): ";
-  cin  >> thetaStep;
-  if (thetaStep <= 0) {
-    cerr << "\n You must enter a value > 0 \n\n Exiting now... \n" << endl;    
-    exit(1);
-  }
+  //cout << "\n Enter the maximum scattering angle (degrees): ";
+  //cin  >> thetaMax;
+  //cout << "\n Enter the integer step size of the scattering angle (degrees): ";
+  //cin  >> thetaStep;
+  //if (thetaStep <= 0) {
+  //  cerr << "\n You must enter a value > 0 \n\n Exiting now... \n" << endl;    
+  //  exit(1);
+  //}
   cout << "\n";
-
+*/
   gridPath.append(gridFileName.c_str());
   gridFile.open(gridPath.c_str());
 
@@ -76,12 +82,13 @@ int main() {
   gridFile << "#\n#\n#\n#\n#\n#\n";
 
   numEpSteps    = round((EpMax - EpMin) / EpStep); 
-  numThetaSteps = round((thetaMax - thetaMin) / thetaStep);
- 
-  theta = 0.0;
-  for (unsigned int i = 0; i <= numThetaSteps; i++) {
+  //numThetaSteps = round((thetaMax - thetaMin) / thetaStep);
 
-    theta = step_theta(thetaMin, thetaStep, i);
+//  theta = 0.0;
+//  for (unsigned int i = 0; i <= numThetaSteps; i++) {
+
+//    theta = step_theta(thetaMin, thetaStep, i);
+    theta = thetaMin;
     Ep    = 0.0;
     Q2    = 0.0;
     W2    = 0.0;
@@ -90,10 +97,11 @@ int main() {
       Ep = step_Ep(EpMin, EpStep, j);
       Q2 = calc_Q2(E0, Ep, theta);
       W2 = calc_W2(E0, Ep, theta);
+      if(W2<0 || Q2<0)continue;
       gridFile << fixed << setprecision(3)  
 	       << E0 << "\t" << Ep << "\t" << theta << "\t" << W2 << "\t" << Q2 << endl;
     }  // Ep loop
-  }  // theta loop
+//  }  // theta loop
 
   gridFile.close();
   return 0;

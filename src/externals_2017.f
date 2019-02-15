@@ -258,7 +258,7 @@ c old        open(unit=7,file='fromin.newdat')
       npts=0                                                                     
       w2last=-100.
       if(dofromin) w2last=100.
-      DO 99 ii=1,100000                                                   
+      DO 99 ii=1,100000                                                  
 c           CALL TIME(VTSTART,TTSTART)                                   
         if(dojan05) then
           read(7,*,end=100) IAjan,E0SET,EPSET,THSET,
@@ -319,7 +319,8 @@ C          CALL INTERPOL(E0SET,EPSET,THSET)
            X     = Q2SET/2./PM/ANU                                      
            Y     = ANU/E0SET                                            
            EPS   = 1./( 1.+2.*SIN2/(1.-SIN2)*(1.+Q2SET/(2.*PM*X)**2))   
-           W2    = PM**2+2.*PM*ANU-Q2SET                                
+           W2    = PM**2+2.*PM*ANU-Q2SET                               
+
 ccc        if(dojan05.and.(w2 - w2last).lt.0.2 .and.w2.gt.1.3) goto 99
            if(dojan05.and.(w2.lt.1.1.or.w2.gt.4.0)) goto 99
            if(dofromin.and.(w2last-w2).lt.0.1) goto 99
@@ -406,7 +407,7 @@ C Radiation length integral. Loop over internal and internal+external:
              if(w2.gt.1.17.or.IA.gt.1) CALL SIMP(
      >          0.,TTARG,NSEG,CONTINUUM,SIGMA_INEL(1))             
 ! quasielastic
-             CALL SIMP(0.,TTARG,NSEG,   QETAIL,SIGMA_QELA(1)) 
+             CALL SIMP(0.,TTARG,NSEG,   QETAIL,SIGMA_QELA(1))
 ! elastic
              if(smrelasp)  then
                doing_elas = .true.
@@ -510,7 +511,7 @@ c             write(6,'(''tst 2'',f7.3,3e11.4)') ttarg,
 c     >         sigma_elpk(2) , sigma_qela(2) , sigma_inel(2)
 ! Total inelastic (DIS + Res. + q.e.) born xsection
            SIGMA_BORNPLSQE = SIGMA_BORN+SIGMA_CORR
-           DO 98 I=1,2                                                  
+           DO 98 I=1,2                                                 
 !*** changed to divide by SIGMA_BORNPLSQE in all cases (before
 ! was only for QELA).
             DELTA_INEL(I) = (SIGMA_INEL(I)/ SIGMA_BORNPLSQE-1.)*100.         
@@ -560,7 +561,7 @@ c    >          DELTA_ELPK(2), TOTAL(2), SIGMA_BORNPLSQE
       srinsv(npts) = sigma_inel(2)
 
 c      write(17,'(36x,2e11.4)') sigma_born,sigma_corr 
-      if(srsv(npts).ne.0.) then 
+      if(srsv(npts).ne.0.) then
          write(17,'(1x,5f7.3,6e11.4,3i3,4e11.4)') 
      >        e0sv(npts),epsv(npts),thsv(npts),
      >        xsv(npts),q2set,
@@ -3318,6 +3319,7 @@ c Changed 8/06 to use better smearing pyb
       real*8 w1sv(0:1000,0:100),w2sv(0:1000,0:100),w1tmp(0:1000)
       real*8 delw,w1a,w1b,delq2,w2a,w2b,q2lo,q2hi,w2tmp(0:1000),psm(7)
 
+      write(*,*) 'hereeesecnuclw' 
 c make grid if first time through
       if(usegrd.and.first) then
         do iq=0,100
