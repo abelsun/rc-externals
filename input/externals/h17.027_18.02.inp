@@ -1,0 +1,4 @@
+input files for EXTERNAL: runplan/target/output
+input/grids/17.027_18.02.inp
+input/targets/eg1b.targ_h_shms
+output/externals/h17.027_18.02.out

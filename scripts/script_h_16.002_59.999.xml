@@ -1,0 +1,50 @@
+<Request>
+  <!-- Fill with your details. Get project name from Hall representative -->
+  <Email email="abels@jlab.org" request="false" job="false" />
+  <Project name="c-comm2017" />
+  <Variable name="F2CONFIG" value="16.002_59.999"/>
+  <Variable name="prefix" value="/w/hallc-scifs17exp/inclusive/abels/MC/rc-externals" />
+
+  <!-- can have different queues -->
+  <Track name="simulation" />
+  <Name name="job_name_rc_mc" />
+  <TimeLimit unit="minutes" time="2000" />
+  <DiskSpace space="10" unit="GB" />
+  <Memory space="2" unit="GB" />
+  <OS name="centos7" />
+  <Command><![CDATA[
+    echo "Initializing Environment"
+    echo "Date:     `date`"
+    echo "User:     `whoami`"
+    echo "Hostname: `hostname`"
+    echo "Path:     `pwd`"
+
+    ## Enter all "commands" here
+    ## Copy code in to farm
+    cp -r ${prefix}/* .
+
+    ## Copy input file
+    cp input/externals/h${F2CONFIG}.inp input/externals/test.inp
+    ./externals_2017
+
+    ## Copy output file out of farm
+    cp output/externals/test.out ${prefix}/output/externals/h${F2CONFIG}.out
+    cp output/externals/h${F2CONFIG}.out ${prefix}/output/externals/h${F2CONFIG}_details.out
+
+    ## Convert
+    ./make_rc_dat test.out h${F2CONFIG}.dat
+   
+    ## Copy results out of farm
+    mv output/rad-corr-data/h${F2CONFIG}.dat ${prefix}/output/rad-corr-data/h${F2CONFIG}.dat
+  ]]></Command>
+
+<Job>
+  <!-- If there are any files that you want to be copied or moved out of the
+       farm, here is how you specify them...
+  <Output src="file_on_farm_node" dest="destination_file_name" />
+ -->
+  <!-- Specify storage for StdOut and StdErr -->
+  <Stdout dest="${prefix}/farmout/farm_h${F2CONFIG}.out" />
+  <Stderr dest="${prefix}/farmout/farm_h${F2CONFIG}.err" />
+</Job>
+</Request>
