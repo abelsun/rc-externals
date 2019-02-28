@@ -380,7 +380,6 @@ C Born cross section:
            prttst=.true.
            CALL SECNUCLW(E0SET,EPSET,TH,SIGMA_BORN)                     
 c           write(98,'(''sig born'',e11.4)') sigma_born
-
            doing_elas = .false.
            CALL QUASIY8(E0SET,EPSET,TH,SIGMA_CORR)                     
 
@@ -445,7 +444,7 @@ cc             SIGMA_QE_PK_COS(1) = .001 *ATAILFL_QE(0.)
                doing_elas = .true.
                SIGMA_ELPK(1) = QETAIL(0.)                                   
                doing_elas = .false.
-             else
+            else
               IF(NUC_METHOD.EQ.0)  THEN
                 SIGMA_ELPK(1) = EPEAK(0.)  !original external    
               ELSEIF(NUC_METHOD.EQ.1)  THEN
@@ -3319,7 +3318,6 @@ c Changed 8/06 to use better smearing pyb
       real*8 w1sv(0:1000,0:100),w2sv(0:1000,0:100),w1tmp(0:1000)
       real*8 delw,w1a,w1b,delq2,w2a,w2b,q2lo,q2hi,w2tmp(0:1000),psm(7)
 
-      write(*,*) 'hereeesecnuclw' 
 c make grid if first time through
       if(usegrd.and.first) then
         do iq=0,100
@@ -3429,8 +3427,9 @@ c divide out dipole
       SIGMA = (W2+2.*TANSQ*W1)*CSMOTT
 C             (per nucleon, including emc effect (which includes neutron
 C              excess correction), if any)                              
-                                                                        
-      SIGMA  = avgA*SIGMA  !per nucleus                                               
+                                                                       
+      SIGMA  = avgA*SIGMA  !per nucleus                                              
+
       if(sigma.lt.0.0.and.wsq.gt.1.0) write(6,'(1x,''error, sigma='',e10.3,2i4,
      >   2f6.3,4e10.3)') sigma,iw,iq,wsq,qsq,w1,w2,tansq,csmott
       sigma = max(0., sigma)                                                                  
@@ -3499,8 +3498,8 @@ c changed to do smearing here now
         Z = IZ
         A = IA
 c        call F1F2IN07(Z, A, QQ, WSQnom, F1, F2)
-c        call F1F2IN09(Z, A, QQ, WSQnom, F1, F2)
-      call gsmearing(Z,A,WSQnom,QQ,F1,F2)
+        call F1F2IN09(Z, A, QQ, WSQnom, F1, F2)
+c      call gsmearing(Z,A,WSQnom,QQ,F1,F2)
         W1sm = F1 / MP
         W2sm = F2 / nu
 c need to make xsection per nucleon here!
